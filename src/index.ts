@@ -23,6 +23,13 @@ import {
   parseArguments,
 } from "./config/index.ts";
 import { initializeDatabase } from "./database/index.ts";
+import { jobsProvider } from "./providers/getJobsProvider.ts";
+import { baseDocsProvider } from "./providers/getBaseDocProvider.ts";
+import { ockProvider } from "./providers/getOnchainKitProvider.ts";
+import { baseCDPProvider } from "./providers/getCDPProvider.ts";
+import { appsProvider } from "./providers/getEcosystemProvider.ts";
+import { notablePeopleProvider } from "./providers/getNotablePeopleProvider.ts";
+import { tutorialsProvider } from "./providers/getTutorialsProvider.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,7 +51,7 @@ export function createAgent(
   elizaLogger.success(
     elizaLogger.successesTitle,
     "Creating runtime for character",
-    character.name,
+    character.name
   );
 
   nodePlugin ??= createNodePlugin();
@@ -60,7 +67,15 @@ export function createAgent(
       nodePlugin,
       character.settings?.secrets?.WALLET_PUBLIC_KEY ? solanaPlugin : null,
     ].filter(Boolean),
-    providers: [],
+    providers: [
+      jobsProvider,
+      baseDocsProvider,
+      ockProvider,
+      baseCDPProvider,
+      appsProvider,
+      notablePeopleProvider,
+      tutorialsProvider,
+    ],
     actions: [],
     services: [],
     managers: [],
@@ -100,7 +115,7 @@ async function startAgent(character: Character, directClient: DirectClient) {
   } catch (error) {
     elizaLogger.error(
       `Error starting agent for character ${character.name}:`,
-      error,
+      error
     );
     console.error(error);
     throw error;
@@ -165,7 +180,7 @@ const startAgents = async () => {
   }
 
   const isDaemonProcess = process.env.DAEMON_PROCESS === "true";
-  if(!isDaemonProcess) {
+  if (!isDaemonProcess) {
     elizaLogger.log("Chat started. Type 'exit' to quit.");
     const chat = startChat(characters);
     chat();
