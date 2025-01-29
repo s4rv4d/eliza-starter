@@ -110,6 +110,7 @@ async function startAgent(character: Character, directClient: DirectClient) {
 
     // report to console
     elizaLogger.debug(`Started ${character.name} as ${runtime.agentId}`);
+    elizaLogger.debug(`testing ${process.env.TWITTER_USERNAME}`);
 
     return runtime;
   } catch (error) {
